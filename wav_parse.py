@@ -33,7 +33,7 @@ def parse_wav(wave_file):
 		
 	first_channel = float_data[::num_channels]
 	floatChannel = map(float, first_channel)
-    return floatChannel
+	return floatChannel
 	
 
 def construct_wav(channels, name):
