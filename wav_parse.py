@@ -18,7 +18,7 @@ def parse_wav(wave_file):
 	if sample_width == 1: 
 		fmt = "%iB" % total_samples # read unsigned chars
 	elif sample_width == 2:
-		fmt = "%if" % (total_samples/2) # read signed 2 byte shorts
+		fmt = "%ih" % (total_samples) # read signed 2 byte shorts
 	else:
 		raise ValueError("Only supports 8 and 16 bit audio formats.")
 
@@ -30,7 +30,11 @@ def parse_wav(wave_file):
 	for index, value in enumerate(float_data):
 		bucket = index % num_channels
 		channels[bucket].append(value)
-	return channels[0]
+	floatChannel = []
+	for i in channels[0]:
+		floatChannel.append(float(i))
+	print floatChannel
+	return floatChannel
 
 def construct_wav(channels, name):
 	noise_output = wv.open(name, 'w')
@@ -39,5 +43,6 @@ def construct_wav(channels, name):
 	data = struct.pack(fmt, *channels)
 	noise_output.writeframes(data)
 	noise_output.close()
+
 
 
