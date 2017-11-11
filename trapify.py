@@ -1,7 +1,7 @@
 import numpy as np
 
 
-CHUNK_SIZE = 4
+CHUNK_SIZE = 2048
 
 def split_phase_and_power(transform):
     """
@@ -11,7 +11,7 @@ def split_phase_and_power(transform):
     """
     power = np.abs(transform)
     phase = np.angle(transform)
-    scale_factor = np.sum(power)
+    scale_factor = np.max(power)
     if scale_factor == 0:
         return power, phase, 1
     else:
@@ -45,5 +45,7 @@ def process(song):
     chunks = list(chunkify(song))
     split_chunks = map(split_phase_and_power, chunks)
     trapified = map(lambda c: (trapify(c[0]), c[1], c[2]), split_chunks)
+    powers = map(lambda x: x[0], trapified)
+    #plt.imshow(np.log(1+np.array(powers).T), cmap='hot', interpolation='bilinear')
     new_song = unchunkify(trapified)
     return new_song
