@@ -33,7 +33,6 @@ def parse_wav(wave_file):
 	floatChannel = []
 	for i in channels[0]:
 		floatChannel.append(float(i))
-	print floatChannel
 	return floatChannel
 
 def construct_wav(channels, name):
