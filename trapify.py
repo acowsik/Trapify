@@ -42,14 +42,8 @@ def trapify(power):
     return power
 
 def process(song):
-    print song, '\n\n'
     chunks = list(chunkify(song))
-    print chunks, '\n\n'
     split_chunks = map(split_phase_and_power, chunks)
-    print split_chunks, '\n\n'
     trapified = map(lambda c: (trapify(c[0]), c[1], c[2]), split_chunks)
-    print trapified, '\n\n'
-    #combined = map(lambda c: combine_phase_and_power(*c), trapified)
     new_song = unchunkify(trapified)
-    print new_song, '\n\n'
     return new_song

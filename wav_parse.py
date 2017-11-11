@@ -30,15 +30,16 @@ def parse_wav(wave_file):
 	for index, value in enumerate(float_data):
 		bucket = index % num_channels
 		channels[bucket].append(value)
-	floatChannel = []
-	for i in channels[0]:
-		floatChannel.append(float(i))
-	return floatChannel
+		
+	first_channel = float_data[::num_channels]
+	floatChannel = map(float, first_channel)
+    return floatChannel
+	
 
 def construct_wav(channels, name):
 	noise_output = wv.open(name, 'w')
 	noise_output.setparams((1, 2, 44100, 0, 'NONE', 'not compressed'))
-	fmt = "%if" % len(channels)
+	fmt = "%ih" % len(channels)
 	data = struct.pack(fmt, *channels)
 	noise_output.writeframes(data)
 	noise_output.close()
