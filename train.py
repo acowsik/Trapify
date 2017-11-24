@@ -9,10 +9,11 @@ import tensorflow as tf
 from autoencoder import AutoEncoder
 from datagenerator import DataGenerator
 from datetime import datetime
+from progress.bar import Bar
 
 # learning parameters
 learning_rate = 0.002
-num_epochs = 50
+num_epochs = 500
 batch_size = 250
 dropout_rate = 0
 
@@ -39,7 +40,7 @@ config.gpu_options.allocator_type = 'BFC'
 
 cwd = os.getcwd()
 checkpoint_path = os.path.join(cwd, "/checkpoint")
-
+print("Checkpoints at " + checkpoint_path)
 
 # Initialize model
 model = AutoEncoder(in_size, out_size, hid_layers)
@@ -51,10 +52,10 @@ saver = tf.train.Saver()
 
 # GPU functions
 """with tf.device("/gpu:0"):"""
-
-loss = tf.reduce_mean(tf.pow(y - score, 2))
-optimizer = tf.train.RMSPropOptimizer(learning_rate).minimize(loss)
-init = tf.global_variables_initializer()
+with tf.device("/cpu:0"):
+	loss = tf.reduce_mean(tf.pow(y - score, 2))
+	optimizer = tf.train.RMSPropOptimizer(learning_rate).minimize(loss)
+	init = tf.global_variables_initializer()
 		
 
 # Initalize the data generator seperately for the training and validation set
@@ -66,8 +67,8 @@ val_generator = DataGenerator(val_file, out_size, in_size)
 """
 FIX THIS
 """
-train_batches_per_epoch = train_generator.length() // batch_size
-val_batches_per_epoch = val_generator.length() // batch_size
+train_batches_per_epoch = 1000#train_generator.length() // batch_size
+val_batches_per_epoch = 1000#val_generator.length() // batch_size
 
 
 with tf.Session() as sess:
@@ -85,10 +86,9 @@ with tf.Session() as sess:
 		train_cost = 0.
 		train_count = 0
 
-		for _ in range(train_batches_per_epoch):
+		for _ in Bar('Epoch ' + str(epoch), suffix="%(index)d/%(max)d %(eta)d").iter(range(train_batches_per_epoch)):
 
 			batch_xs = train_generator.next_batch(batch_size)
-
 			#running the train op
 			sess.run(optimizer, feed_dict={x: batch_xs, y: batch_xs, keep_prob: dropout_rate})
 			cost = sess.run(loss, feed_dict = {x: batch_xs, y: batch_xs, keep_prob: 1.})
@@ -105,7 +105,7 @@ with tf.Session() as sess:
 		test_cost = 0.
 		test_count = 0
 
-		for _ in range(val_batches_per_epoch):
+		for _ in Bar("Validation " + str(epoch), suffix="%(index)d/%(max)d %(eta)d").iter(range(val_batches_per_epoch)):
 			batch_tx = val_generator.next_batch(batch_size)
 			cost = sess.run(loss, feed_dict = {x: batch_tx, y: batch_tx, keep_prob: 1.})
 
@@ -117,7 +117,7 @@ with tf.Session() as sess:
 
 
 		# saving the end of the num of epochs
-		if epoch == 1:
+		if epoch == 1 or True:
 			print("{} Saving checkpoint of model...".format(datetime.now()))
 
 			#save checkpoint of the model

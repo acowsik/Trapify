@@ -46,17 +46,17 @@ class AutoEncoder(object):
 
 		CHECK IF DROPOUT NEEDED
 		"""
-		print tf.shape(x)
-		print tf.shape(self.enc_h1)
-		print tf.shape(self.enc_b1)
+		print(tf.shape(x))
+		print(tf.shape(self.enc_h1))
+		print(tf.shape(self.enc_b1))
 
 		encode_1 = fc(x, self.enc_h1, self.enc_b1, relu = True)
 
 		encode_2 = fc(encode_1, self.enc_h2, self.enc_b2, relu = True)
-		print tf.shape(encode_2)
+		print(tf.shape(encode_2))
 		middle = fc(encode_2, self.enc_h3, self.enc_b3, relu = True)
 
-		print tf.shape(middle)
+		print(tf.shape(middle))
 
 		decode_1 = fc(middle, self.dec_h1, self.dec_b1, relu = True)
 		decode_2 = fc(decode_1, self.dec_h2, self.dec_b2, relu = True)

@@ -17,13 +17,13 @@ class DataGenerator:
 		# function returns the next batch of images as a np array of 4d size
 		# returns the labels in a numpy array as well
 		
-		r = self.wave.stream(batch_size*self.INSIZE)
+		r = self.wave.stream_samples(batch_size*self.INSIZE)
 
 		if r == None:
 			self.wave.rewind()
-			r = self.wave.stream(batch_size*self.INSIZE)
+			r = self.wave.stream_samples(batch_size*self.INSIZE)
 
-		rNum = np.reshape(r, [batch_size, self.INSIZE])
+		rNum = np.reshape(list(r), [batch_size, self.INSIZE])
 
 		converted = []
 
