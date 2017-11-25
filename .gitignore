@@ -6,6 +6,9 @@ __pycache__/
 # Wave files
 *.wav
 
+# save files
+*.save.*
+
 # C extensions
 *.so
 

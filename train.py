@@ -39,7 +39,7 @@ config.gpu_options.allocator_type = 'BFC'
 """
 
 cwd = os.getcwd()
-checkpoint_path = os.path.join(cwd, "/checkpoint")
+checkpoint_path = os.path.join(cwd, "checkpoint")
 print("Checkpoints at " + checkpoint_path)
 
 # Initialize model
@@ -67,8 +67,8 @@ val_generator = DataGenerator(val_file, out_size, in_size)
 """
 FIX THIS
 """
-train_batches_per_epoch = 1000#train_generator.length() // batch_size
-val_batches_per_epoch = 1000#val_generator.length() // batch_size
+train_batches_per_epoch = train_generator.length() // batch_size
+val_batches_per_epoch = val_generator.length() // batch_size
 
 
 with tf.Session() as sess:
@@ -121,7 +121,14 @@ with tf.Session() as sess:
 			print("{} Saving checkpoint of model...".format(datetime.now()))
 
 			#save checkpoint of the model
-			checkpoint_name = os.path.join(checkpoint_path, 'my_model')
-			save_path = saver.save(sess, checkpoint_name)
-
+			try:
+				checkpoint_name = os.path.join(checkpoint_path, 'my_model')
+				print(checkpoint_name, 'checkpoint name')
+				save_path = saver.save(sess, checkpoint_name)
+			except:
+				try:
+					save_path=saver.save(sess,'./try.save')
+				except:
+					pass
+			
 			print("{} Model checkpoint saved at {}".format(datetime.now(), checkpoint_name))

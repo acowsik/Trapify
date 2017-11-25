@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/aditya/Desktop/Trapify/checkpoint/my_model"
+all_model_checkpoint_paths: "/home/aditya/Desktop/Trapify/checkpoint/my_model"
